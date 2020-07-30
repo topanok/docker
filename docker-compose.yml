@@ -18,7 +18,7 @@ services:
             - php
             - mysqldb
     php:
-        container_name: php-70
+        container_name: php-7.1-
         build:
             context: ./etc/php
 

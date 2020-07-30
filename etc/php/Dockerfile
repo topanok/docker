@@ -1,4 +1,4 @@
-FROM php:7.0-fpm
+FROM php:7.1-fpm
 
 RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
         git \
@@ -33,15 +33,10 @@ RUN set -xe \
         pdo_mysql \
         pdo_pgsql \
     && yes | pecl install \
-        libxml2-dev \
-        apcu \
         xdebug \
-        redis \
     && yes | docker-php-ext-enable \
-        apcu \
         xdebug \
-        soap \
-        redis
+        soap
 
 COPY php.ini /usr/local/etc/php/php.ini
 RUN sed -i -e "s#TIMEZONE#$timezone#g" /usr/local/etc/php/php.ini
