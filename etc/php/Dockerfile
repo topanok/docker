@@ -1,4 +1,4 @@
-FROM php:7.1-fpm
+FROM php:7.2-fpm
 
 RUN apt-get update && apt-get install --no-install-recommends --no-install-suggests -y \
         git \
@@ -38,20 +38,22 @@ RUN set -xe \
         xdebug \
         soap
 
-COPY php.ini /usr/local/etc/php/php.ini
-RUN sed -i -e "s#TIMEZONE#$timezone#g" /usr/local/etc/php/php.ini
+COPY php.ini /usr/local/etc/php/7.2/php.ini
+RUN sed -i -e "s#TIMEZONE#$timezone#g" /usr/local/etc/php/7.2/php.ini
 
 COPY --from=composer:1.6 /usr/bin/composer /usr/bin/composer
 
-# https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER 1
-# create composer cache directory
 
+# create composer cache directory
 RUN mkdir -p /var/www/.composer && chown -R www-data /var/www/.composer
 
-#RUN git clone https://topanok@bitbucket.org/perpspective_studio/foreign-degrau-repository.git ./web
+RUN cd /var/www/html
 
-#RUN cd /var/www/web/src && composer install
+RUN git clone {{your repo}}
+
+RUN cd /var/www/html && composer install
+
 RUN usermod -u 1000 www-data
 
 WORKDIR /var/www/html
